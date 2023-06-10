@@ -9,7 +9,7 @@ Esse projeto tem como objetivo demonstrar todo o processo de criação de um ban
 
   <strong>Criação do Modelo Lógico</strong> – Etapa onde serão definidas as estruturas de armazenamento dos dados no banco e também seus relacionamentos. Serão definidos os registros, tipos de dados dos campos, tamanhos, chaves primárias e estrangeiras etc.
 
-  <strong>Criação do Modelo Físico</strong> – Etapa onde será realizado o design do banco de dados de acordo com o modelo lógico definido. Nesta etapa também definimos o SGBD que será utilizado, nesse projeto utilizaremos o SGBD Microsoft SQL Server 2016.
+  <strong>Criação do Modelo Físico</strong> – Etapa onde será realizado o design do banco de dados de acordo com o modelo lógico definido. Nesta etapa também definimos o SGBD que será utilizado, nesse projeto utilizaremos o SGBD Microsoft SQL Server 2019.
 
 Neste projeto será criado o modelo de banco de dados de uma Oficina Auto elétrica de pequeno porte, cenário o qual já tive experiência profissional durante dois anos antes de iniciar os estudos na área de tecnologia. Algumas informações serão simuladas afim de garantir um melhor desempenho nos processos criados para a conclusão do projeto.
 
@@ -102,9 +102,147 @@ Segue abaixo exemplo do modelo lógico definido para esse projeto.
 
 ![Modelo_Lógico_Oficina](https://github.com/falatugb/Projeto_Oficina/blob/main/Modelo_Oficina_Lógico1.png)
   
+<h1>
+    Modelo Físico
+</h1>
   
+  <p>
+ A fase final do processo envolve o desenvolvimento e a execução dos scripts para a implementação física do banco de dados, incorporando os requisitos coletados durante as fases de modelagem lógica e conceitual. Nessa etapa, serão desenvolvidas as tabelas, colunas, índices, restrições e outros elementos estruturais do banco de dados. 
+Para este projeto, faremos uso do sistema de gerenciamento de banco de dados (SGBD) Microsoft SQL Server 2019.
+Os SGBDs são softwares responsáveis pelo gerenciamento eficiente de bases de dados, desempenhando um papel fundamental na organização, armazenamento e manipulação dos dados. 
+
+  <h2>•	Criação do banco de dados </h2>
+Para darmos início ao nosso projeto, o primeiro passo para a modelagem física é a criação do nosso banco de dados. 
+
+Utilizaremos as configurações padrão do SQL Server 2019 para propriedades do banco de dados como Autogrowth, Recovery Model, Endpoints e quantidade de arquivos de log e dados de linhas também serão padrão. O comando utilizado para a criação do banco de dados é o seguinte:
+ 
+```SQL  
+CREATE DATABASE PROJETO_OFICINA
+ON PRIMARY
+(
+	NAME = PROJETO_OFICINA_DATA,
+	FILENAME = 'C:\DATAFILES\PROJETO_OFICINA.MDF'
+)
+
+LOG ON 
+(
+	NAME = PROJETO_OFICINA_LOG,
+	FILENAME = 'C:\DATAFILES\PROJETO_OFICINA.LDF'
+)
+```
+  </p>
+ <p>
+  <h2>• Criação das tabelas </h2>
+Após a criação do banco de dados, a próxima etapa será a criação das tabelas. Serão definidos os campos, tamanhos, tipos e restrições, incluindo também a chave primária de cada tabela. Abaixo estão os comandos utilizados para criar as tabelas.
+  </p>
   
+ 
+ ```SQL
+CREATE TABLE SETORES
+(
+    ID_SETOR         INT IDENTITY (100,1) PRIMARY KEY,
+    NOME_SETOR       VARCHAR (30) NOT NULL,
+    QNT_FUNC         INT
+)
 
 
+CREATE TABLE FUNCIONARIOS
+(
+    ID_FUNC          INT IDENTITY (1,1) PRIMARY KEY,
+    FK_ID_SETOR      INT,
+    NOME             VARCHAR (50) NOT NULL, 
+    CARGO            VARCHAR (30) NOT NULL,
+    SEXO             VARCHAR (20) NOT NULL,
+    TELEFONE         VARCHAR (11) NOT NULL,
+    ENDERECO         VARCHAR (40) NOT NULL,
+    BAIRRO           VARCHAR (30) NOT NULL,
+    DATA_NASC        DATE NOT NULL,
+    DATA_ADMISSAO    DATE NOT NULL,
+    SALARIO          FLOAT NOT NULL,
+    OBSERVACAO       VARCHAR (100)
+)
+
+CREATE TABLE TIPO_PAGAMENTO
+(
+    ID_TIPOPG        INT IDENTITY(1,1) PRIMARY KEY,
+    TIPO_PAGAMENTO   VARCHAR(50),
+    DESC_SERVICO     VARCHAR(300)
+)
+
+CREATE TABLE SERVICO_PRESTADO
+(
+    ID_SERVICO       INT IDENTITY (1,1) PRIMARY KEY,
+    TIPO_SERVICO     VARCHAR (30),
+    HORA_INICIO      DATETIME,
+    HORA_TERMINO     DATETIME,
+    VALOR_PECA       FLOAT,
+    VALOR_MO         FLOAT,
+    DESCONTOS        FLOAT,
+    FK_FORMA_PG      INT,
+    VALOR_TOTAL      FLOAT,
+    DESC_SERVICO     VARCHAR (100),
+    FK_ID_FUNC       INT,
+    FK_ID_VEICULO    INT
+)
+
+CREATE TABLE CLIENTES
+(
+    ID_CLIENTE       INT IDENTITY (1,1) PRIMARY KEY,
+    NOME_CLIENTE     VARCHAR (50) NOT NULL,
+    ENDERECO         VARCHAR (40),
+    BAIRRO           VARCHAR (30),
+    DATA_NASC        DATE,
+    CPF              CHAR (14),
+    TELEFONE         VARCHAR (11) NOT NULL
+)
+
+CREATE TABLE VEICULOS 
+(
+    ID_VEICULO       INT IDENTITY (100,1) PRIMARY KEY,
+    NOME_VEICULO     VARCHAR (50) NOT NULL,
+    COR_VEICULO      VARCHAR (10) NOT NULL,
+    DATA_ENTRADA     DATE NOT NULL,
+    DATA_SAIDA       DATE NOT NULL,
+    PLACA            VARCHAR (10) NOT NULL,
+    OBSERVACAO       VARCHAR (100),
+    FK_ID_CLIENTE    INT
+)
+
+ 
+ ```
+   <p>
+  <h2>• Criação dos relacionamentos entre as tabelas </h2>
+Após a criação das tabelas, precisamos criar os relacionamentos entre elas, para isso serão criadas as restrições de integridade (CONSTRAINTS) relacionando o campo de uma tabela com outro campo de outra tabela, criando o relacionamento entre duas tabelas distintas, nomeados como Foreign Key.
+  </p>
   
-  <small><i>-- Atualizado em 31/05/2023</i></small>
+ ```SQL
+  ALTER TABLE VEICULOS
+ADD CONSTRAINT FK_ID_CLIENTE 
+FOREIGN KEY (FK_ID_CLIENTE)
+REFERENCES CLIENTES (ID_CLIENTE) 
+
+ALTER TABLE FUNCIONARIOS
+ADD CONSTRAINT FK_ID_SETOR
+FOREIGN KEY (FK_ID_SETOR)
+REFERENCES SETORES (ID_SETOR)
+
+ALTER TABLE SERVICO_PRESTADO
+ADD CONSTRAINT FK2_ID_FUNC
+FOREIGN KEY (FK_ID_FUNC)
+REFERENCES FUNCIONARIOS (ID_FUNC)
+
+ALTER TABLE SERVICO_PRESTADO
+ADD CONSTRAINT FK_ID_VEICULO
+FOREIGN KEY (FK_ID_VEICULO)
+REFERENCES VEICULOS (ID_VEICULO)
+
+ALTER TABLE SERVICO_PRESTADO
+ADD CONSTRAINT FK_TIPO_PAGAMENTO
+FOREIGN KEY (FK_FORMA_PG)
+REFERENCES TIPO_PAGAMENTO (ID_TIPOPG)
+ ```
+  
+  
+  
+  
+  <small><i>-- Atualizado em 09/06/2023</i></small>
