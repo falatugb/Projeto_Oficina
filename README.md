@@ -241,8 +241,58 @@ ADD CONSTRAINT FK_TIPO_PAGAMENTO
 FOREIGN KEY (FK_FORMA_PG)
 REFERENCES TIPO_PAGAMENTO (ID_TIPOPG)
  ```
+  <p>
+	  <h2>• Criação de usuários e definição de permissões </h2>
+	  
+Para este projeto, serão criados dois usuários com diferentes níveis de permissão para acessar o banco de dados, com o objetivo de restringir o acesso aos dados conforme necessário.
+
+• Gerente – Para este projeto, será criado um usuário com o papel de “Gerente”. Esse usuário terá permissões para executar operações de alteração, inserção, atualização e exclusão de dados no banco de dados. Além disso, o usuário terá permissão para criar views que serão utilizadas para a geração de relatórios personalizados que se encaixem nas necessidades da empresa.
+
+Para criarmos o usuário GERENTE utilizaremos o seguinte script.
+```SQL
+-- Criando LOGIN e USUÁRIO no banco de dados
+CREATE LOGIN GERENCIA WITH PASSWORD = 'GERENCIA_OFICINA';
+CREATE USER GERENCIA FOR LOGIN GERENCIA;
+```
+
+No SQL Server, há uma restrição que impede a criação de vários usuários a um único login em um banco de dados. Portanto, será necessário criar logins e usuários separados para cada caso.
+
+• Funcionários – Esse usuário terá permissões para executar apenas operações de consultas no banco de dados, sendo o nível mais básico de acesso à base de dados
+```SQL
+CREATE LOGIN FUNCIONARIOS WITH PASSWORD = 'FUNCIONARIOS_OFICINA'
+CREATE USER FUNCIONARIOS FOR LOGIN FUNCIONARIOS;
+```
+
+<h2>• Permissões </h2>
+
+Para conceder permissões aos usuários, devemos informar quais tabelas o usuário poderá acessar. Por tratar-se de um projeto com poucas tabelas, o script de permissões pode ser visualizado abaixo.
+
+- GERENCIA
+```SQL
+-- PERMISSÕES: GERENCIA
+GRANT SELECT, UPDATE, DELETE, INSERT ON CLIENTES          TO GERENCIA
+GRANT SELECT, UPDATE, DELETE, INSERT ON FUNCIONARIOS      TO GERENCIA
+GRANT SELECT, UPDATE, DELETE, INSERT ON SERVICO_PRESTADO  TO GERENCIA
+GRANT SELECT, UPDATE, DELETE, INSERT ON SETORES           TO GERENCIA
+GRANT SELECT, UPDATE, DELETE, INSERT ON TIPO_PG           TO GERENCIA
+GRANT SELECT, UPDATE, DELETE, INSERT ON TIPO_SERVICO      TO GERENCIA
+GRANT SELECT, UPDATE, DELETE, INSERT ON VEICULOS          TO GERENCIA
+GRANT CREATE VIEW TO GERENCIA
+
+```
+
+- FUNCIONARIOS
+```SQL
+-- PERMISSÕES: FUNCIONARIOS
+GRANT SELECT ON CLIENTES          TO FUNCIONARIOS
+GRANT SELECT ON FUNCIONARIOS      TO FUNCIONARIOS
+GRANT SELECT ON SERVICO_PRESTADO  TO FUNCIONARIOS
+GRANT SELECT ON SETORES           TO FUNCIONARIOS
+GRANT SELECT ON TIPO_PG           TO FUNCIONARIOS
+GRANT SELECT ON TIPO_SERVICO      TO FUNCIONARIOS
+GRANT SELECT ON VEICULOS          TO FUNCIONARIOS
+
+```
+  </p>
   
-  
-  
-  
-  <small><i>-- Atualizado em 09/06/2023</i></small>
+  <small><i>-- Atualizado em 14/06/2023</i></small>
