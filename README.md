@@ -59,7 +59,7 @@ Modelo Conceitual
 A criação do modelo conceitual é o segundo processo para a criação do banco de dados, utilizaremos como base o Modelo Entidade-Relacionamento. Nessa etapa, será definida a estrutura do banco de dados de forma independente do SGBD utilizado. Definiremos os atributos das entidades e seus relacionamentos e modelo de cardinalidade entre as tabelas, tendo como objetivo visualizar, definir e gerar o entendimento da regra de negócio aplicada a criação do banco de dados. Segue abaixo exemplo do modelo conceitual desenvolvido para esse projeto.
 </p>
 
-![Modelo_Conceitual_Oficina](https://github.com/falatugb/Projeto_Oficina/blob/main/Modelo_Oficina_Conceitual1.jpg)
+![Modelo_Conceitual_Oficina](https://github.com/falatugb/Projeto_Oficina/blob/main/Modelo_Oficina_Conceitual.jpg)
 
 
 <h1>
@@ -100,7 +100,7 @@ Segue abaixo exemplo do modelo lógico definido para esse projeto.
 </p>
 
 
-![Modelo_Lógico_Oficina](https://github.com/falatugb/Projeto_Oficina/blob/main/Modelo_Oficina_Lógico1.png)
+![Modelo_Lógico_Oficina]()
   
 <h1>
     Modelo Físico
