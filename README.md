@@ -100,7 +100,7 @@ Segue abaixo exemplo do modelo lógico definido para esse projeto.
 </p>
 
 
-![Modelo_Lógico_Oficina]()
+![Modelo_Lógico_Oficina](https://github.com/falatugb/Projeto_Oficina/blob/main/Modelo_Oficina_Lógico1.png)
   
 <h1>
     Modelo Físico
